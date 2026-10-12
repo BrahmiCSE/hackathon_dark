@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echelon Young Innovators Hackathon 2026</title>
+  <meta name="description" content="An inter-school hackathon for students of Classes 9 to 12, by the Department of Computer Science and Engineering, Echelon Institute of Technology, Faridabad. Grand finale 21 November 2026.">
+  <meta name="theme-color" content="#0A0F14">
+
+  <!-- Browser tab icon. The SVG is used where supported, the PNG
+       is the fallback and is also what iPhones use on the home screen. -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ============================================================
+     POSTER POPUP
+
+     Appears two seconds after the page has loaded, so visitors see
+     the site first. Hidden in the stylesheet by default and only
+     shown by script.js, so a failed script can never leave a dead
+     overlay covering the site.
+     ============================================================ -->
+<div class="promo" id="promo" role="dialog" aria-modal="true" aria-labelledby="promo-title" hidden>
+  <div class="promo-card">
+    <button class="promo-close" id="promo-close" type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+
+    <img class="promo-img" src="images/poster.jpg" width="800" height="1000"
+         alt="Echelon Young Innovators Hackathon 2026 poster. Registration 12 to 30 October 2026.
+              Online round 31 October to 5 November. Offline round 21 November at Echelon Institute
+              of Technology, Faridabad. Prizes of 21,000, 11,000 and 5,100 rupees.">
+
+    <h2 class="promo-title" id="promo-title">Registration opens 12 October</h2>
+
+    <div class="promo-actions">
+      <a class="btn"
+         href="https://unstop.com/p/echelon-young-innovators-hackathon-2026-echelon-institute-of-technology-1768767"
+         target="_blank" rel="noopener noreferrer">Register on Unstop</a>
+      <button class="btn btn-outline" type="button" id="promo-dismiss">Maybe later</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     CUSTOM CURSOR
+     A dot that tracks the pointer exactly and a ring that trails
+     behind it. script.js only switches these on when there is a
+     real mouse, so phones and tablets are unaffected. If the
+     script fails, the normal cursor is never hidden.
+     ============================================================ -->
+<div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+<div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+
+<!-- ============================================================
+     GLASS SHAPES AND GRADIENTS
+
+     The puzzle cube (logo and hero) and the loose puzzle pieces are
+     drawn once here and reused with <use href="#...">. This block
+     has zero size but is not display:none, because browsers will not
+     paint gradients that live in a hidden SVG.
+     ============================================================ -->
+<svg class="svg-defs" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- Cube faces: teal top, navy-to-green left, navy-to-teal right -->
+    <linearGradient id="g-cube-top" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#CFF5EE" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#7FD4C8" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="g-cube-left" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#3A5580" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#3E6B58" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="g-cube-right" x1="1" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#8DA7CF" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#2C6E68" stop-opacity="0.9"/>
+    </linearGradient>
+
+    <!-- Loose pieces -->
+    <linearGradient id="g-teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#BFEFE7"/><stop offset="1" stop-color="#4FA79B"/>
+    </linearGradient>
+    <linearGradient id="g-navy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C9D7EC"/><stop offset="1" stop-color="#5B7AA6"/>
+    </linearGradient>
+    <linearGradient id="g-green" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#CFE8D6"/><stop offset="1" stop-color="#5E9472"/>
+    </linearGradient>
+    <linearGradient id="g-slate" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#D5DEE6"/><stop offset="1" stop-color="#6C7F90"/>
+    </linearGradient>
+    <linearGradient id="g-mint" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EFFBF5"/><stop offset="1" stop-color="#A9DFC6"/>
+    </linearGradient>
+    <radialGradient id="g-orb" cx="0.35" cy="0.3" r="0.75">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.45" stop-color="#BFEFE7"/>
+      <stop offset="1" stop-color="#5B7AA6"/>
+    </radialGradient>
+
+    <!-- The glass puzzle cube -->
+    <symbol id="cube" viewBox="0 0 100 104">
+      <path d="M12 30 L50 52 L50 96 L12 74 Z" fill="url(#g-cube-left)"/>
+      <path d="M50 52 L88 30 L88 74 L50 96 Z" fill="url(#g-cube-right)"/>
+      <path d="M50 8 L88 30 L50 52 L12 30 Z" fill="url(#g-cube-top)"/>
+      <!-- Jigsaw seams -->
+      <g fill="none" stroke="#FFFFFF" stroke-width="1.7" stroke-linecap="round"
+         stroke-linejoin="round" stroke-opacity="0.9">
+        <path d="M31 41 V55 C24 52 24 67 31 64 V85"/>
+        <path d="M69 41 V57 C76 54 76 69 69 66 V85"/>
+        <path d="M12 52 L50 74 L88 52"/>
+        <path d="M31 19 L69 41"/>
+        <path d="M69 19 L31 41"/>
+      </g>
+      <!-- Outline and a bright front edge, where glass catches the light -->
+      <path d="M50 8 L88 30 L88 74 L50 96 L12 74 L12 30 Z" fill="none"
+            stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M12 30 L50 52 L88 30 M50 52 V96" fill="none"
+            stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-opacity="0.95"/>
+    </symbol>
+
+    <!-- A single puzzle piece. Its colour comes from the fill on <use>. -->
+    <symbol id="piece" viewBox="0 0 100 100">
+      <path d="M20 30 H40 C40 30 36 17 50 17 C64 17 60 30 60 30 H80 V45
+               C80 45 93 41 93 55 C93 69 80 65 80 65 V82 H20 V65
+               C20 65 32 69 32 55 C32 41 20 45 20 45 Z"
+            stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M26 36 H38" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============================================================
+     ICON SET
+
+     Every icon on the page is drawn here once, then reused with
+     <svg class="icon"><use href="#icon-name"></use></svg>
+     This block is invisible. It is only a store of shapes.
+     ============================================================ -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- Graduation cap -->
+    <symbol id="icon-cap" viewBox="0 0 24 24">
+      <path d="M2 8.5 12 4l10 4.5-10 4.5z"/>
+      <path d="M6 10.7V15c0 1.3 2.7 2.6 6 2.6s6-1.3 6-2.6v-4.3"/>
+      <path d="M21.5 9v5"/>
+    </symbol>
+
+    <!-- Two people -->
+    <symbol id="icon-team" viewBox="0 0 24 24">
+      <circle cx="9" cy="8" r="3.2"/>
+      <path d="M3 19.5c0-3 2.7-5 6-5s6 2 6 5"/>
+      <path d="M16.5 5.5a3 3 0 0 1 0 5.8"/>
+      <path d="M18 14.8c2 .7 3.4 2.3 3.4 4.7"/>
+    </symbol>
+
+    <!-- School building -->
+    <symbol id="icon-school" viewBox="0 0 24 24">
+      <path d="M4 20V9l8-5 8 5v11"/>
+      <path d="M4 20h16"/>
+      <path d="M10 20v-5h4v5"/>
+      <path d="M12 8.5v2"/>
+    </symbol>
+
+    <!-- Laptop -->
+    <symbol id="icon-laptop" viewBox="0 0 24 24">
+      <rect x="4" y="5" width="16" height="10" rx="1.5"/>
+      <path d="M2 18.5h20"/>
+    </symbol>
+
+    <!-- Clock -->
+    <symbol id="icon-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.5"/>
+      <path d="M12 7v5.2l3.4 2"/>
+    </symbol>
+
+    <!-- Document -->
+    <symbol id="icon-doc" viewBox="0 0 24 24">
+      <path d="M14 3H7a1.5 1.5 0 0 0-1.5 1.5v15A1.5 1.5 0 0 0 7 21h10a1.5 1.5 0 0 0 1.5-1.5V7.5z"/>
+      <path d="M14 3v4.5h4.5"/>
+      <path d="M9 12.5h6M9 16h4"/>
+    </symbol>
+
+    <!-- Wrench, for building things -->
+    <symbol id="icon-build" viewBox="0 0 24 24">
+      <path d="M15.6 3.6a5.5 5.5 0 0 0-7 7L3.8 15.4a2 2 0 0 0 0 2.8l2 2a2 2 0 0 0 2.8 0l4.8-4.8a5.5 5.5 0 0 0 7-7l-3.1 3.1-2.9-.6-.6-2.9z"/>
+    </symbol>
+
+    <!-- Lightbulb, for mentors -->
+    <symbol id="icon-idea" viewBox="0 0 24 24">
+      <path d="M9 17.5a6 6 0 1 1 6 0v1.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 19z"/>
+      <path d="M9.5 17.5h5"/>
+    </symbol>
+
+    <!-- Trophy -->
+    <symbol id="icon-trophy" viewBox="0 0 24 24">
+      <path d="M7.5 4h9v5a4.5 4.5 0 0 1-9 0z"/>
+      <path d="M7.5 5.5H5a2.5 2.5 0 0 0 2.5 4.5"/>
+      <path d="M16.5 5.5H19a2.5 2.5 0 0 1-2.5 4.5"/>
+      <path d="M12 13.5V17"/>
+      <path d="M8.5 20h7"/>
+      <path d="M10 20c0-1.7.7-3 2-3s2 1.3 2 3"/>
+    </symbol>
+
+    <!-- Medal -->
+    <symbol id="icon-medal" viewBox="0 0 24 24">
+      <circle cx="12" cy="15" r="5"/>
+      <path d="M8.5 10.5 6 3.5h4L12 8"/>
+      <path d="M15.5 10.5 18 3.5h-4L12 8"/>
+    </symbol>
+
+    <!-- Chip, for AI and smart tech -->
+    <symbol id="icon-chip" viewBox="0 0 24 24">
+      <rect x="7" y="7" width="10" height="10" rx="2"/>
+      <path d="M10 3.5v3M14 3.5v3M10 17.5v3M14 17.5v3"/>
+      <path d="M3.5 10h3M3.5 14h3M17.5 10h3M17.5 14h3"/>
+    </symbol>
+
+    <!-- Open book, for education -->
+    <symbol id="icon-book" viewBox="0 0 24 24">
+      <path d="M12 6.5C10.4 5.2 8.4 4.5 6 4.5H3.5v13H6c2.4 0 4.4.7 6 2"/>
+      <path d="M12 6.5c1.6-1.3 3.6-2 6-2h2.5v13H18c-2.4 0-4.4.7-6 2z"/>
+      <path d="M12 6.5v15"/>
+    </symbol>
+
+    <!-- Leaf, for sustainability -->
+    <symbol id="icon-leaf" viewBox="0 0 24 24">
+      <path d="M20 4c0 9-5.2 13.5-10.5 13.5A5.5 5.5 0 0 1 4 12C4 6.8 9.5 4 20 4z"/>
+      <path d="M4.5 20C7 15 11 11.5 16 9.5"/>
+    </symbol>
+
+    <!-- Shield with a pulse, for health and safety -->
+    <symbol id="icon-shield" viewBox="0 0 24 24">
+      <path d="M12 3 20 6v6c0 4.4-3.3 7.8-8 9-4.7-1.2-8-4.6-8-9V6z"/>
+      <path d="M8 12h2l1.3-2.5L13 14l1-2h2"/>
+    </symbol>
+
+    <!-- Phone -->
+    <symbol id="icon-phone" viewBox="0 0 24 24">
+      <path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5z"/>
+    </symbol>
+
+    <!-- Map pin -->
+    <symbol id="icon-pin" viewBox="0 0 24 24">
+      <path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z"/>
+      <circle cx="12" cy="10" r="2.6"/>
+    </symbol>
+
+    <!-- Envelope -->
+    <symbol id="icon-mail" viewBox="0 0 24 24">
+      <rect x="3" y="5.5" width="18" height="13" rx="2"/>
+      <path d="M3.6 6.8 12 13l8.4-6.2"/>
+    </symbol>
+
+    <!-- Calendar -->
+    <symbol id="icon-calendar" viewBox="0 0 24 24">
+      <rect x="3.5" y="5" width="17" height="15" rx="2"/>
+      <path d="M3.5 9.5h17M8 3v4M16 3v4"/>
+    </symbol>
+
+    <!-- Rupee -->
+    <symbol id="icon-rupee" viewBox="0 0 24 24">
+      <path d="M7 4h10M7 8.5h10M7 13h4.5c2.5 0 4.5-1.9 4.5-4.3"/>
+      <path d="M7 13l7.5 7"/>
+    </symbol>
+
+    <!-- Terminal -->
+    <symbol id="icon-terminal" viewBox="0 0 24 24">
+      <rect x="2.5" y="4" width="19" height="16" rx="2"/>
+      <path d="M7 10l3 2.5-3 2.5M13 15h4"/>
+    </symbol>
+
+    <!-- Spark, for open innovation -->
+    <symbol id="icon-spark" viewBox="0 0 24 24">
+      <path d="M12 3.5 13.9 9 19.5 11 13.9 13 12 18.5 10.1 13 4.5 11 10.1 9z"/>
+      <path d="M18.5 4v3M20 5.5h-3"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============================================================
+     NAVIGATION BAR
+     ============================================================ -->
+<header class="navbar">
+  <div class="container nav-inner">
+
+    <a href="#home" class="logo">
+      <!-- The glass puzzle cube. favicon.svg is the same drawing,
+           so if you change one, change the other to match. -->
+      <svg class="logo-mark" viewBox="0 0 100 104" aria-hidden="true">
+        <use href="#cube"></use>
+      </svg>
+      <span class="logo-text">Young Innovators</span>
+    </a>
+
+    <nav id="site-nav" class="nav-links" aria-label="Main navigation">
+      <a href="#about">About</a>
+      <a href="#tracks">Tracks</a>
+      <a href="#timeline">Timeline</a>
+      <a href="#eligibility">Who can join</a>
+      <a href="#prizes">Prizes</a>
+      <a href="#faqs">FAQs</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <!-- All three Register buttons point to the Unstop listing.
+         If the link ever changes, update it in all three places:
+         here, in the hero, and in the Registration section. -->
+    <a href="https://unstop.com/p/echelon-young-innovators-hackathon-2026-echelon-institute-of-technology-1768767"
+       class="btn btn-small nav-cta" target="_blank" rel="noopener noreferrer">Register</a>
+
+    <button id="menu-toggle" class="menu-toggle" aria-label="Open menu"
+            aria-expanded="false" aria-controls="site-nav">
+      <span class="menu-bar"></span>
+      <span class="menu-bar"></span>
+      <span class="menu-bar"></span>
+    </button>
+
+  </div>
+</header>
+
+<main>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero" id="home">
+
+    <!-- Glass scene. A big puzzle cube with loose pieces floating
+         round it. Beside the title on a laptop, above it on a phone.
+         data-depth is how strongly each shape follows the pointer:
+         bigger numbers feel closer. --r is a resting angle, --dur
+         how long one float takes, --delay staggers them. -->
+    <div class="hero-scene" aria-hidden="true">
+      <div class="hero-scene-inner" id="hero-scene-inner">
+
+        <div class="shape shape-cube" data-depth="0.6">
+          <div class="shape-float" style="--r:0deg; --dur:10s;">
+            <!-- script.js builds a real 3D glass cube in here. The flat
+                 drawing below is what shows if the script cannot run. -->
+            <div class="cube3d" id="cube3d">
+              <svg class="cube3d-fallback" viewBox="0 0 100 104"><use href="#cube"></use></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="shape shape-piece shape-p1" data-depth="1.6">
+          <div class="shape-float" style="--r:-18deg; --dur:8s; --delay:-2s;">
+            <svg viewBox="0 0 100 100"><use href="#piece" fill="url(#g-green)"></use></svg>
+          </div>
+        </div>
+
+        <div class="shape shape-piece shape-p2" data-depth="2">
+          <div class="shape-float" style="--r:22deg; --dur:9s; --delay:-5s;">
+            <svg viewBox="0 0 100 100"><use href="#piece" fill="url(#g-navy)"></use></svg>
+          </div>
+        </div>
+
+        <div class="shape shape-piece shape-p3" data-depth="1.2">
+          <div class="shape-float" style="--r:40deg; --dur:11s; --delay:-1s;">
+            <svg viewBox="0 0 100 100"><use href="#piece" fill="url(#g-teal)"></use></svg>
+          </div>
+        </div>
+
+        <div class="shape shape-piece shape-p4" data-depth="2.4">
+          <div class="shape-float" style="--r:-30deg; --dur:7s; --delay:-3s;">
+            <svg viewBox="0 0 100 100"><use href="#piece" fill="url(#g-slate)"></use></svg>
+          </div>
+        </div>
+
+        <div class="shape shape-mini shape-m1" data-depth="1.8">
+          <div class="shape-float" style="--r:12deg; --dur:9.5s; --delay:-4s;">
+            <svg viewBox="0 0 100 104"><use href="#cube"></use></svg>
+          </div>
+        </div>
+
+        <div class="shape shape-mini shape-m2" data-depth="2.6">
+          <div class="shape-float" style="--dur:6.5s; --delay:-2.5s;">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="44" fill="url(#g-orb)" stroke="#FFFFFF" stroke-width="2"/>
+              <ellipse cx="36" cy="32" rx="12" ry="7" fill="#FFFFFF" opacity="0.85"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container">
+
+      <!-- Status strip. The live state is written by script.js. -->
+      <div class="hud">
+        <span class="hud-cell"><span class="hud-dot" aria-hidden="true"></span><span id="hud-state">SYS &middot; LOADING</span></span>
+        <span class="hud-sep" aria-hidden="true"></span>
+        <span class="hud-cell">BUILD WINDOW 09:00 &rarr; 18:00 IST</span>
+        <span class="hud-sep" aria-hidden="true"></span>
+        <span class="hud-cell">09H &middot; ONE SITTING</span>
+      </div>
+
+      <p class="eyebrow"><span class="inst"><img class="inst-mark" src="images/college-logo.png" alt="" onerror="this.remove()">Echelon Institute of Technology, Faridabad</span></p>
+
+      <p class="badge">Free to enter</p>
+
+      <h1 class="hero-title">Echelon Young <span class="grad">Innovators</span> Hackathon 2026</h1>
+
+      <p class="hero-tagline">
+        Every big idea starts as scattered pieces. Bring your team, find the fit, and build a
+        working prototype in nine hours. An inter-school hackathon for students of Classes 9 to 12.
+      </p>
+
+      <!-- Countdown. Numbers are filled in by script.js -->
+      <div class="countdown" id="countdown">
+        <p class="countdown-label" id="countdown-label">Loading countdown</p>
+        <div class="countdown-row">
+          <div class="countdown-unit">
+            <span class="countdown-value" id="cd-days">--</span>
+            <span class="countdown-name">days</span>
+          </div>
+          <div class="countdown-unit">
+            <span class="countdown-value" id="cd-hours">--</span>
+            <span class="countdown-name">hours</span>
+          </div>
+          <div class="countdown-unit">
+            <span class="countdown-value" id="cd-mins">--</span>
+            <span class="countdown-name">minutes</span>
+          </div>
+          <div class="countdown-unit">
+            <span class="countdown-value" id="cd-secs">--</span>
+            <span class="countdown-name">seconds</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-buttons">
+        <a href="https://unstop.com/p/echelon-young-innovators-hackathon-2026-echelon-institute-of-technology-1768767"
+           class="btn" target="_blank" rel="noopener noreferrer">Register your team</a>
+        <a href="#about" class="btn btn-outline">What is this?</a>
+      </div>
+
+      <!-- Quick facts -->
+      <dl class="facts" data-stagger>
+        <div class="fact">
+          <dt><svg class="icon icon-sm" aria-hidden="true"><use href="#icon-calendar"></use></svg>Grand finale</dt>
+          <dd>21 November 2026</dd>
+        </div>
+        <div class="fact">
+          <dt><svg class="icon icon-sm" aria-hidden="true"><use href="#icon-spark"></use></svg>Tracks</dt>
+          <dd>Five to choose from</dd>
+        </div>
+        <div class="fact">
+          <dt><svg class="icon icon-sm" aria-hidden="true"><use href="#icon-team"></use></svg>Team size</dt>
+          <dd>2 to 4 students</dd>
+        </div>
+        <div class="fact">
+          <dt><svg class="icon icon-sm" aria-hidden="true"><use href="#icon-cap"></use></svg>Open to</dt>
+          <dd>Classes 9 to 12</dd>
+        </div>
+        <div class="fact">
+          <dt><svg class="icon icon-sm" aria-hidden="true"><use href="#icon-rupee"></use></svg>Entry fee</dt>
+          <dd>None, it is free</dd>
+        </div>
+      </dl>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT
+       ============================================================ -->
+  <section class="section" id="about">
+    <div class="container about-grid">
+
+      <div>
+        <p class="sec-index" data-reveal>01 / ABOUT</p>
+        <h2 data-reveal>Ideas are easy. Putting the pieces together is the fun part.</h2>
+        <p>
+          The Echelon Young Innovators Hackathon 2026 is an inter-school hackathon for students of
+          Classes 9 to 12, hosted by the Department of Computer Science and Engineering at
+          <span class="inst"><img class="inst-mark" src="images/college-logo.png" alt="" onerror="this.remove()">Echelon Institute of Technology, Faridabad</span>.
+        </p>
+        <p>
+          Students form small teams, pick a problem worth solving, and build a working
+          prototype. Teams that clear the online round come to campus for a nine-hour finale and
+          present what they have built to industry mentors and judges.
+        </p>
+        <p>
+          You do not need to have done this before. Bring a team, an idea and some curiosity.
+          We will help you work out the rest.
+        </p>
+      </div>
+
+      <!-- A code window, drawn entirely in HTML and CSS. It is
+           decorative, so it is hidden from screen readers, and the
+           same facts appear as real text elsewhere on the page. -->
+      <div class="codewin" data-reveal aria-hidden="true">
+        <div class="codewin-bar">
+          <span class="codewin-dot codewin-dot-1"></span>
+          <span class="codewin-dot codewin-dot-2"></span>
+          <span class="codewin-dot codewin-dot-3"></span>
+          <span class="codewin-name">hackathon.js</span>
+        </div>
+        <pre class="codewin-body"><code><span class="ln">1</span><span class="kw">const</span> <span class="vr">hackathon</span> = {
+<span class="ln">2</span>  <span class="pr">name</span>: <span class="st">"Echelon Young Innovators"</span>,
+<span class="ln">3</span>  <span class="pr">classes</span>: [<span class="nu">9</span>, <span class="nu">10</span>, <span class="nu">11</span>, <span class="nu">12</span>],
+<span class="ln">4</span>  <span class="pr">team</span>: { <span class="pr">min</span>: <span class="nu">2</span>, <span class="pr">max</span>: <span class="nu">4</span> },
+<span class="ln">5</span>  <span class="pr">hours</span>: <span class="nu">9</span>,
+<span class="ln">6</span>  <span class="pr">tracks</span>: <span class="nu">5</span>,
+<span class="ln">7</span>  <span class="pr">prizePool</span>: <span class="nu">37100</span>,
+<span class="ln">8</span>  <span class="pr">entryFee</span>: <span class="nu">0</span>
+<span class="ln">9</span>};
+<span class="ln">10</span>
+<span class="ln">11</span><span class="vr">hackathon</span>.<span class="fn">build</span>();
+<span class="ln">12</span><span class="cm">// &rarr; prototype.ready()</span><span class="caret"></span></code></pre>
+      </div>
+    </div>
+
+    <ul class="highlights container" data-stagger>
+      <li>
+        <svg class="icon" aria-hidden="true"><use href="#icon-build"></use></svg>
+        <div>
+          <h3>Build, don't just pitch</h3>
+          <p>You leave with a prototype that runs, not a slide deck about one.</p>
+        </div>
+      </li>
+      <li>
+        <svg class="icon" aria-hidden="true"><use href="#icon-idea"></use></svg>
+        <div>
+          <h3>Mentors on the floor</h3>
+          <p>Industry mentors are on hand through the finale whenever you get stuck.</p>
+        </div>
+      </li>
+      <li>
+        <svg class="icon" aria-hidden="true"><use href="#icon-trophy"></use></svg>
+        <div>
+          <h3>Judged on the work</h3>
+          <p>Present to a panel of judges at the end of the day.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============================================================
+       TRACKS
+
+       To add a track, copy one <li> block and change the icon,
+       heading and sentence. The rail adjusts to the number of items.
+       ============================================================ -->
+  <section class="section section-alt" id="tracks">
+
+    <!-- Circuit traces, drawn in code. Decorative only. -->
+    <svg class="circuit" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true">
+      <g fill="none" stroke="#1F3240" stroke-width="1.4">
+        <path d="M0 40 H180 L210 70 H420 L450 40 H700 L730 70 H1000 L1030 40 H1200"/>
+        <path d="M0 150 H120 L150 120 H380 L410 150 H660 L690 120 H960 L990 150 H1200"/>
+        <path d="M0 260 H240 L270 230 H520 L550 260 H820 L850 230 H1080 L1110 260 H1200"/>
+        <path d="M210 70 V150M730 70 V120M550 260 V150M990 150 V230"/>
+      </g>
+      <g fill="#2C4152">
+        <circle cx="210" cy="70" r="4"/><circle cx="450" cy="40" r="4"/>
+        <circle cx="730" cy="70" r="4"/><circle cx="1030" cy="40" r="4"/>
+        <circle cx="150" cy="120" r="4"/><circle cx="410" cy="150" r="4"/>
+        <circle cx="690" cy="120" r="4"/><circle cx="990" cy="150" r="4"/>
+        <circle cx="270" cy="230" r="4"/><circle cx="550" cy="260" r="4"/>
+        <circle cx="850" cy="230" r="4"/><circle cx="1110" cy="260" r="4"/>
+      </g>
+      <!-- Two pulses of light travelling along the traces -->
+      <path class="trace" d="M0 150 H120 L150 120 H380 L410 150 H660 L690 120 H960 L990 150 H1200"
+            fill="none" stroke="#93C5A3" stroke-width="2.4"/>
+      <path class="trace trace-late" d="M0 40 H180 L210 70 H420 L450 40 H700 L730 70 H1000 L1030 40 H1200"
+            fill="none" stroke="#7FD4C8" stroke-width="2.4"/>
+    </svg>
+
+    <div class="container">
+      <p class="sec-index" data-reveal>02 / TRACKS</p>
+      <h2 data-reveal>Five tracks. Find where your idea fits.</h2>
+      <p class="section-intro" data-reveal>
+        Choose a track when you register. If your idea does not slot neatly into one of the
+        first four, Open Innovation is where it belongs.
+      </p>
+
+      <ul class="tracks" data-stagger>
+        <div class="tk-rail" aria-hidden="true"></div>
+        <span class="tk-glow" id="tk-glow" aria-hidden="true"></span>
+        <li class="tk-item">
+          <span class="tk-node" aria-hidden="true">
+            <svg class="icon" aria-hidden="true"><use href="#icon-chip"></use></svg>
+          </span>
+          <h3>AI &amp; Smart Tech</h3>
+          <p class="tk-detail">Machine learning, automation and smart devices put to work on a real problem.</p>
+        </li>
+        <li class="tk-item">
+          <span class="tk-node" aria-hidden="true">
+            <svg class="icon" aria-hidden="true"><use href="#icon-book"></use></svg>
+          </span>
+          <h3>Education &amp; Digital Learning</h3>
+          <p class="tk-detail">Tools that make learning easier, cheaper or available to more students.</p>
+        </li>
+        <li class="tk-item">
+          <span class="tk-node" aria-hidden="true">
+            <svg class="icon" aria-hidden="true"><use href="#icon-leaf"></use></svg>
+          </span>
+          <h3>Sustainability &amp; Environment</h3>
+          <p class="tk-detail">Ideas that cut waste, save energy or help people live more lightly.</p>
+        </li>
+        <li class="tk-item">
+          <span class="tk-node" aria-hidden="true">
+            <svg class="icon" aria-hidden="true"><use href="#icon-shield"></use></svg>
+          </span>
+          <h3>Health, Safety &amp; Society</h3>
+          <p class="tk-detail">Projects that keep people healthier, safer or better connected to help.</p>
+        </li>
+        <li class="tk-item tk-open">
+          <span class="tk-node" aria-hidden="true">
+            <svg class="icon" aria-hidden="true"><use href="#icon-spark"></use></svg>
+          </span>
+          <h3>Open Innovation</h3>
+          <p class="tk-detail">The piece that fits nowhere else. If the idea is good, bring it.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TIMELINE
+       ============================================================ -->
+  <section class="section section-alt" id="timeline">
+    <div class="container">
+      <p class="sec-index" data-reveal>03 / TIMELINE</p>
+      <h2 data-reveal>How the hackathon runs</h2>
+      <p class="section-intro" data-reveal>Four stages between now and the finale.</p>
+
+      <!-- The stage marked as happening now is worked out by script.js
+           from the dates below, so it stays correct without editing. -->
+      <ol class="timeline" id="timeline" data-stagger>
+        <div class="tl-rail" aria-hidden="true"><span class="tl-rail-fill" id="tl-fill"></span></div>
+
+        <li class="tl-step" data-start="2026-10-12T10:00:00+05:30"
+                            data-end="2026-10-30T23:59:59+05:30">
+          <span class="tl-node" aria-hidden="true"><span class="tl-num">1</span></span>
+          <p class="tl-when">12 Oct, 10am &ndash; 30 Oct, 11:59pm</p>
+          <h3>Registration</h3>
+          <p class="tl-detail">Form your team and sign up on Unstop. Classes 9 to 12.</p>
+        </li>
+
+        <li class="tl-step" data-start="2026-10-31T10:00:00+05:30"
+                            data-end="2026-11-05T23:59:59+05:30">
+          <span class="tl-node" aria-hidden="true"><span class="tl-num">2</span></span>
+          <p class="tl-when">31 Oct, 10am &ndash; 5 Nov, 11:59pm</p>
+          <h3>Online round</h3>
+          <p class="tl-detail">Submit your idea. Shortlisted teams go through.</p>
+        </li>
+
+        <li class="tl-step" data-start="2026-11-10T00:00:00+05:30"
+                            data-end="2026-11-10T23:59:59+05:30">
+          <span class="tl-node" aria-hidden="true"><span class="tl-num">3</span></span>
+          <p class="tl-when">10 Nov</p>
+          <h3>Results</h3>
+          <p class="tl-detail">Shortlisted teams are announced and invited to campus.</p>
+        </li>
+
+        <li class="tl-step tl-step-final" data-start="2026-11-21T09:00:00+05:30"
+                                          data-end="2026-11-21T18:00:00+05:30">
+          <span class="tl-node" aria-hidden="true"><span class="tl-num">4</span></span>
+          <p class="tl-when">21 Nov, 9am &ndash; 6pm</p>
+          <h3>Grand finale</h3>
+          <p class="tl-detail">Nine hours of building on campus, then judging.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ELIGIBILITY AND RULES
+       ============================================================ -->
+  <section class="section" id="eligibility">
+    <div class="container">
+      <p class="sec-index" data-reveal>04 / ELIGIBILITY</p>
+      <h2 data-reveal>Who can take part</h2>
+      <p class="section-intro" data-reveal>Tap any card to read the detail.</p>
+
+      <div class="rules" data-stagger>
+        <button class="rule" type="button" aria-expanded="false">
+          <span class="rule-inner">
+            <span class="rule-face rule-front">
+              <svg class="icon" aria-hidden="true"><use href="#icon-cap"></use></svg>
+              <span class="rule-title">Classes 9 to 12</span>
+              <span class="rule-hint">Tap to read</span>
+            </span>
+            <span class="rule-face rule-back">
+              <span class="rule-detail">Only school students from Class 9 to Class 12 are eligible to take part.</span>
+              <span class="rule-hint">Tap to go back</span>
+            </span>
+          </span>
+        </button>
+        <button class="rule" type="button" aria-expanded="false">
+          <span class="rule-inner">
+            <span class="rule-face rule-front">
+              <svg class="icon" aria-hidden="true"><use href="#icon-team"></use></svg>
+              <span class="rule-title">Teams of 2 to 4</span>
+              <span class="rule-hint">Tap to read</span>
+            </span>
+            <span class="rule-face rule-back">
+              <span class="rule-detail">You cannot enter alone. Minimum two members, maximum four.</span>
+              <span class="rule-hint">Tap to go back</span>
+            </span>
+          </span>
+        </button>
+        <button class="rule" type="button" aria-expanded="false">
+          <span class="rule-inner">
+            <span class="rule-face rule-front">
+              <svg class="icon" aria-hidden="true"><use href="#icon-school"></use></svg>
+              <span class="rule-title">One school per team</span>
+              <span class="rule-hint">Tap to read</span>
+            </span>
+            <span class="rule-face rule-back">
+              <span class="rule-detail">Every member of a team must be from the same school.</span>
+              <span class="rule-hint">Tap to go back</span>
+            </span>
+          </span>
+        </button>
+        <button class="rule" type="button" aria-expanded="false">
+          <span class="rule-inner">
+            <span class="rule-face rule-front">
+              <svg class="icon" aria-hidden="true"><use href="#icon-laptop"></use></svg>
+              <span class="rule-title">Online, then on campus</span>
+              <span class="rule-hint">Tap to read</span>
+            </span>
+            <span class="rule-face rule-back">
+              <span class="rule-detail">The first round is online. Shortlisted teams attend the finale in person.</span>
+              <span class="rule-hint">Tap to go back</span>
+            </span>
+          </span>
+        </button>
+        <button class="rule" type="button" aria-expanded="false">
+          <span class="rule-inner">
+            <span class="rule-face rule-front">
+              <svg class="icon" aria-hidden="true"><use href="#icon-clock"></use></svg>
+              <span class="rule-title">Nine hours to build</span>
+              <span class="rule-hint">Tap to read</span>
+            </span>
+            <span class="rule-face rule-back">
+              <span class="rule-detail">The finale runs 9:00 AM to 6:00 PM on 21 November 2026.</span>
+              <span class="rule-hint">Tap to go back</span>
+            </span>
+          </span>
+        </button>
+        <button class="rule rule-pending" type="button" aria-expanded="false">
+          <span class="rule-inner">
+            <span class="rule-face rule-front">
+              <svg class="icon" aria-hidden="true"><use href="#icon-doc"></use></svg>
+              <span class="rule-title">Detailed rules</span>
+              <span class="rule-hint">Tap to read</span>
+            </span>
+            <span class="rule-face rule-back">
+              <span class="rule-detail">Submission format, judging criteria and the code of conduct will be announced.</span>
+              <span class="rule-hint">Tap to go back</span>
+            </span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PRIZES
+       ============================================================ -->
+  <section class="section section-alt" id="prizes">
+    <div class="container">
+      <p class="sec-index" data-reveal>05 / PRIZES</p>
+      <h2 data-reveal>A prize pool of &#8377;37,100</h2>
+      <p class="section-intro" data-reveal>
+        Awarded to the top three teams at the grand finale.
+      </p>
+
+      <div class="podium" data-stagger>
+        <!-- Second, first, third. First sits in the middle and stands
+             tallest, the way a podium actually reads. -->
+        <div class="pod pod-2">
+          <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-medal"></use></svg>
+          <p class="pod-amount">&#8377;11,000</p>
+          <div class="pod-block"><span class="pod-rank">2nd</span></div>
+        </div>
+
+        <div class="pod pod-1">
+          <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-trophy"></use></svg>
+          <p class="pod-amount">&#8377;21,000</p>
+          <div class="pod-block"><span class="pod-rank">1st</span></div>
+        </div>
+
+        <div class="pod pod-3">
+          <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-medal"></use></svg>
+          <p class="pod-amount">&#8377;5,100</p>
+          <div class="pod-block"><span class="pod-rank">3rd</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TICKER
+       The strip is written twice so it can loop without a visible
+       jump. The second copy is hidden from screen readers.
+       ============================================================ -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-run">
+        <span>&#8377;37,100 PRIZE POOL</span><i>&#10022;</i>
+        <span>9 HOURS NON-STOP</span><i>&#10022;</i>
+        <span>CLASSES 9 TO 12</span><i>&#10022;</i>
+        <span>TEAMS OF 2 TO 4</span><i>&#10022;</i>
+        <span>FREE ENTRY</span><i>&#10022;</i>
+        <span>5 TRACKS</span><i>&#10022;</i>
+        <span>21 NOV 2026</span><i>&#10022;</i>
+      </span>
+      <span class="ticker-run">
+        <span>&#8377;37,100 PRIZE POOL</span><i>&#10022;</i>
+        <span>9 HOURS NON-STOP</span><i>&#10022;</i>
+        <span>CLASSES 9 TO 12</span><i>&#10022;</i>
+        <span>TEAMS OF 2 TO 4</span><i>&#10022;</i>
+        <span>FREE ENTRY</span><i>&#10022;</i>
+        <span>5 TRACKS</span><i>&#10022;</i>
+        <span>21 NOV 2026</span><i>&#10022;</i>
+      </span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       REGISTRATION CALL TO ACTION
+       ============================================================ -->
+  <section class="section register" id="register">
+    <div class="container register-inner">
+      <!-- Two glass pieces that click together as this section comes
+           into view. Purely decorative. -->
+      <div class="snap" id="snap" aria-hidden="true">
+        <svg viewBox="0 0 200 100">
+          <path class="snap-a" fill="url(#g-teal)" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round"
+                d="M20 15 H100 V36 C100 36 116 32 116 50 C116 68 100 64 100 64 V85 H20 Z"/>
+          <path class="snap-b" fill="url(#g-navy)" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round"
+                d="M100 15 H180 V85 H100 V64 C100 64 116 68 116 50 C116 32 100 36 100 36 Z"/>
+          <circle class="snap-flash" cx="108" cy="50" r="14" fill="#FFFFFF"/>
+        </svg>
+      </div>
+
+      <h2 data-reveal>Registration closes 30 October 2026</h2>
+      <p>
+        Every team is a puzzle that needs the right pieces. Find your two to four, then sign up
+        on Unstop. Registration is free.
+        Any questions, call <a href="tel:+919310268975">+91 93102 68975</a>.
+      </p>
+      <a href="https://unstop.com/p/echelon-young-innovators-hackathon-2026-echelon-institute-of-technology-1768767"
+         class="btn btn-lg" target="_blank" rel="noopener noreferrer">Register on Unstop</a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FAQs
+       ============================================================ -->
+  <section class="section" id="faqs">
+    <div class="container faq-grid">
+      <div>
+        <p class="sec-index" data-reveal>06 / FAQ</p>
+        <h2 data-reveal>Questions</h2>
+        <p data-reveal>Tap a question to open it. Still stuck? The numbers to call are at the end.</p>
+      </div>
+
+      <div class="faq-list" data-stagger>
+        <details>
+          <summary>Who can participate?</summary>
+          <p>Students of Classes 9 to 12 only, in teams of two to four. All members of a team
+             must be from the same school.</p>
+        </details>
+
+        <details>
+          <summary>When and where is the finale?</summary>
+          <p>21 November 2026, 9:00 AM to 6:00 PM, at <span class="inst"><img class="inst-mark" src="images/college-logo.png" alt="" onerror="this.remove()">Echelon Institute of Technology, Faridabad</span>.</p>
+        </details>
+
+        <details>
+          <summary>Is the whole event in person?</summary>
+          <p>No. The first round runs online from 31 October to 5 November 2026. Only shortlisted
+             teams attend the finale on campus.</p>
+        </details>
+
+        <details>
+          <summary>Is there a registration fee?</summary>
+          <p>No. Taking part is completely free.</p>
+        </details>
+
+        <details>
+          <summary>Can I take part on my own?</summary>
+          <p>No. The minimum team size is two.</p>
+        </details>
+
+        <details>
+          <summary>Do I need to know how to code already?</summary>
+          <p>Some coding ability in the team helps, but the hackathon is built for Class 9 to 12
+             students and beginners are very welcome. Mentors are there to help on the day.</p>
+        </details>
+
+        <details>
+          <summary>I have a question that is not answered here. Who do I ask?</summary>
+          <p>Call the Student Coordinator, Yogita, on
+             <a href="tel:+917827669804">+91 78276 69804</a>, or the Faculty Coordinator,
+             Mr. Pranav Bhati, on <a href="tel:+917065437032">+91 70654 37032</a>.</p>
+        </details>
+
+        <details>
+          <summary>What are the themes or problem statements?</summary>
+          <p>There are five tracks: AI and Smart Tech, Education and Digital Learning,
+             Sustainability and Environment, Health, Safety and Society, and Open Innovation.
+             You pick one when you register.</p>
+        </details>
+
+        <details>
+          <summary>How do we register?</summary>
+          <p>Use any Register button on this page. It opens the official listing on Unstop,
+             where one member signs up and adds the rest of the team. Registration is open from
+             12 October to 30 October 2026.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+       ============================================================ -->
+  <section class="section section-alt" id="contact">
+
+    <!-- Jigsaw grid with signals running along the seams. Same idea as
+         the circuit behind the tracks, but drawn as puzzle pieces, so
+         the page ends on its theme. Decorative only. -->
+    <svg class="jigsaw" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g fill="none" stroke="#1C2D3A" stroke-width="1.3">
+        <path d="M0 105 L40 105 C30 88 75 88 65 105 L105 105 L145 105 C135 122 180 122 170 105 L210 105 L250 105 C240 88 285 88 275 105 L315 105 L355 105 C345 122 390 122 380 105 L420 105 L460 105 C450 88 495 88 485 105 L525 105 L565 105 C555 122 600 122 590 105 L630 105 L670 105 C660 88 705 88 695 105 L735 105 L775 105 C765 122 810 122 800 105 L840 105 L880 105 C870 88 915 88 905 105 L945 105 L985 105 C975 122 1020 122 1010 105 L1050 105 L1090 105 C1080 88 1125 88 1115 105 L1155 105 L1195 105 C1185 122 1230 122 1220 105 L1200 105"/>
+        <path d="M0 210 L40 210 C30 227 75 227 65 210 L105 210 L145 210 C135 193 180 193 170 210 L210 210 L250 210 C240 227 285 227 275 210 L315 210 L355 210 C345 193 390 193 380 210 L420 210 L460 210 C450 227 495 227 485 210 L525 210 L565 210 C555 193 600 193 590 210 L630 210 L670 210 C660 227 705 227 695 210 L735 210 L775 210 C765 193 810 193 800 210 L840 210 L880 210 C870 227 915 227 905 210 L945 210 L985 210 C975 193 1020 193 1010 210 L1050 210 L1090 210 C1080 227 1125 227 1115 210 L1155 210 L1195 210 C1185 193 1230 193 1220 210 L1200 210"/>
+        <path d="M0 315 L40 315 C30 298 75 298 65 315 L105 315 L145 315 C135 332 180 332 170 315 L210 315 L250 315 C240 298 285 298 275 315 L315 315 L355 315 C345 332 390 332 380 315 L420 315 L460 315 C450 298 495 298 485 315 L525 315 L565 315 C555 332 600 332 590 315 L630 315 L670 315 C660 298 705 298 695 315 L735 315 L775 315 C765 332 810 332 800 315 L840 315 L880 315 C870 298 915 298 905 315 L945 315 L985 315 C975 332 1020 332 1010 315 L1050 315 L1090 315 C1080 298 1125 298 1115 315 L1155 315 L1195 315 C1185 332 1230 332 1220 315 L1200 315"/>
+        <path d="M105 0 L105 40 C88 30 88 75 105 65 L105 105 L105 145 C122 135 122 180 105 170 L105 210 L105 250 C88 240 88 285 105 275 L105 315 L105 355 C122 345 122 390 105 380 L105 420"/>
+        <path d="M210 0 L210 40 C227 30 227 75 210 65 L210 105 L210 145 C193 135 193 180 210 170 L210 210 L210 250 C227 240 227 285 210 275 L210 315 L210 355 C193 345 193 390 210 380 L210 420"/>
+        <path d="M315 0 L315 40 C298 30 298 75 315 65 L315 105 L315 145 C332 135 332 180 315 170 L315 210 L315 250 C298 240 298 285 315 275 L315 315 L315 355 C332 345 332 390 315 380 L315 420"/>
+        <path d="M420 0 L420 40 C437 30 437 75 420 65 L420 105 L420 145 C403 135 403 180 420 170 L420 210 L420 250 C437 240 437 285 420 275 L420 315 L420 355 C403 345 403 390 420 380 L420 420"/>
+        <path d="M525 0 L525 40 C508 30 508 75 525 65 L525 105 L525 145 C542 135 542 180 525 170 L525 210 L525 250 C508 240 508 285 525 275 L525 315 L525 355 C542 345 542 390 525 380 L525 420"/>
+        <path d="M630 0 L630 40 C647 30 647 75 630 65 L630 105 L630 145 C613 135 613 180 630 170 L630 210 L630 250 C647 240 647 285 630 275 L630 315 L630 355 C613 345 613 390 630 380 L630 420"/>
+        <path d="M735 0 L735 40 C718 30 718 75 735 65 L735 105 L735 145 C752 135 752 180 735 170 L735 210 L735 250 C718 240 718 285 735 275 L735 315 L735 355 C752 345 752 390 735 380 L735 420"/>
+        <path d="M840 0 L840 40 C857 30 857 75 840 65 L840 105 L840 145 C823 135 823 180 840 170 L840 210 L840 250 C857 240 857 285 840 275 L840 315 L840 355 C823 345 823 390 840 380 L840 420"/>
+        <path d="M945 0 L945 40 C928 30 928 75 945 65 L945 105 L945 145 C962 135 962 180 945 170 L945 210 L945 250 C928 240 928 285 945 275 L945 315 L945 355 C962 345 962 390 945 380 L945 420"/>
+        <path d="M1050 0 L1050 40 C1067 30 1067 75 1050 65 L1050 105 L1050 145 C1033 135 1033 180 1050 170 L1050 210 L1050 250 C1067 240 1067 285 1050 275 L1050 315 L1050 355 C1033 345 1033 390 1050 380 L1050 420"/>
+        <path d="M1155 0 L1155 40 C1138 30 1138 75 1155 65 L1155 105 L1155 145 C1172 135 1172 180 1155 170 L1155 210 L1155 250 C1138 240 1138 285 1155 275 L1155 315 L1155 355 C1172 345 1172 390 1155 380 L1155 420"/>
+      </g>
+      <path class="seam-run" d="M0 210 L40 210 C30 227 75 227 65 210 L105 210 L145 210 C135 193 180 193 170 210 L210 210 L250 210 C240 227 285 227 275 210 L315 210 L355 210 C345 193 390 193 380 210 L420 210 L460 210 C450 227 495 227 485 210 L525 210 L565 210 C555 193 600 193 590 210 L630 210 L670 210 C660 227 705 227 695 210 L735 210 L775 210 C765 193 810 193 800 210 L840 210 L880 210 C870 227 915 227 905 210 L945 210 L985 210 C975 193 1020 193 1010 210 L1050 210 L1090 210 C1080 227 1125 227 1115 210 L1155 210 L1195 210 C1185 193 1230 193 1220 210 L1200 210" fill="none" stroke="#7FD4C8" stroke-width="2.6"/>
+      <path class="seam-run seam-run-2" d="M840 0 L840 40 C857 30 857 75 840 65 L840 105 L840 145 C823 135 823 180 840 170 L840 210 L840 250 C857 240 857 285 840 275 L840 315 L840 355 C823 345 823 390 840 380 L840 420" fill="none" stroke="#93C5A3" stroke-width="2.6"/>
+      <path class="seam-run seam-run-3" d="M0 315 L40 315 C30 298 75 298 65 315 L105 315 L145 315 C135 332 180 332 170 315 L210 315 L250 315 C240 298 285 298 275 315 L315 315 L355 315 C345 332 390 332 380 315 L420 315 L460 315 C450 298 495 298 485 315 L525 315 L565 315 C555 332 600 332 590 315 L630 315 L670 315 C660 298 705 298 695 315 L735 315 L775 315 C765 332 810 332 800 315 L840 315 L880 315 C870 298 915 298 905 315 L945 315 L985 315 C975 332 1020 332 1010 315 L1050 315 L1090 315 C1080 298 1125 298 1115 315 L1155 315 L1195 315 C1185 332 1230 332 1220 315 L1200 315" fill="none" stroke="#8DA7CF" stroke-width="2.6"/>
+    </svg>
+
+    <div class="container contact-grid">
+
+      <div>
+        <p class="sec-index" data-reveal>07 / CONTACT</p>
+        <h2 data-reveal>Contact</h2>
+        <p>
+          Organised by the Department of Computer Science and Engineering,
+          <span class="inst"><img class="inst-mark" src="images/college-logo.png" alt="" onerror="this.remove()">Echelon Institute of Technology, Faridabad</span>.
+        </p>
+        <p class="affiliation">
+          An initiative by &ldquo;The Last Centre&rdquo;.
+          Affiliated to Guru Gobind Singh Indraprastha University.
+        </p>
+        <div class="org-card" data-reveal>
+          <img class="org-lockup" src="images/echelon-ggsipu.png" width="1200" height="277" alt="Echelon, Transforming the Education. An initiative by The Last Centre. Affiliated to Guru Gobind Singh Indraprastha University.">
+        </div>
+      </div>
+
+      <!-- Rings that ripple out from behind the card, like a call
+           going out. Decorative only. -->
+      <div class="contact-wrap">
+        <span class="ping" aria-hidden="true"></span>
+        <span class="ping ping-2" aria-hidden="true"></span>
+        <span class="ping ping-3" aria-hidden="true"></span>
+        <dl class="contact-details" data-stagger>
+          <div>
+            <dt><svg class="icon icon-sm" aria-hidden="true"><use href="#icon-phone"></use></svg>Faculty Coordinator</dt>
+            <!-- tel: makes the number tappable on a phone -->
+            <dd>Mr. Pranav Bhati<br>
+                <a href="tel:+917065437032">+91 70654 37032</a></dd>
+          </div>
+          <div>
+            <dt><svg class="icon icon-sm" aria-hidden="true"><use href="#icon-phone"></use></svg>Student Coordinator</dt>
+            <dd>Yogita<br>
+                <a href="tel:+917827669804">+91 78276 69804</a></dd>
+          </div>
+          <div>
+            <dt><svg class="icon icon-sm" aria-hidden="true"><use href="#icon-terminal"></use></svg>General queries</dt>
+            <dd><a href="tel:+919310268975">+91 93102 68975</a></dd>
+          </div>
+          <div>
+            <dt><svg class="icon icon-sm" aria-hidden="true"><use href="#icon-pin"></use></svg>Venue</dt>
+            <dd><span class="inst"><img class="inst-mark" src="images/college-logo.png" alt="" onerror="this.remove()">Echelon Institute of Technology, Faridabad, Haryana</span></dd>
+          </div>
+          <div>
+            <dt><svg class="icon icon-sm" aria-hidden="true"><use href="#icon-mail"></use></svg>Email</dt>
+            <!-- Replace with the real address when you have it:
+                 <dd><a href="mailto:name@echelon.edu.in">name@echelon.edu.in</a></dd> -->
+            <dd>To be announced</dd>
+          </div>
+        </dl>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <img class="org-lockup org-lockup-footer" src="images/echelon-ggsipu.png" width="1200" height="277" alt="Echelon, Transforming the Education. An initiative by The Last Centre. Affiliated to Guru Gobind Singh Indraprastha University.">
+    <p class="footer-title">Echelon Young Innovators Hackathon 2026</p>
+    <p class="footer-meta">
+      Department of Computer Science and Engineering,
+      <span class="inst"><img class="inst-mark" src="images/college-logo.png" alt="" onerror="this.remove()">Echelon Institute of Technology, Faridabad</span>
+    </p>
+    <p class="footer-meta">
+      An initiative by &ldquo;The Last Centre&rdquo; &middot;
+      Affiliated to Guru Gobind Singh Indraprastha University
+    </p>
+    <p class="footer-meta">&copy; <span id="year">2026</span> <span class="inst"><img class="inst-mark" src="images/college-logo.png" alt="" onerror="this.remove()">Echelon Institute of Technology</span></p>
+    <a href="#home" class="footer-top">Back to top</a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

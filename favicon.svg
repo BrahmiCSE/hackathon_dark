@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 104">
+  <!-- Same glass puzzle cube as the logo in index.html -->
+  <defs>
+    <linearGradient id="t" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#CFF5EE"/><stop offset="1" stop-color="#7FD4C8"/>
+    </linearGradient>
+    <linearGradient id="l" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#3A5580"/><stop offset="1" stop-color="#3E6B58"/>
+    </linearGradient>
+    <linearGradient id="r" x1="1" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#8DA7CF"/><stop offset="1" stop-color="#2C6E68"/>
+    </linearGradient>
+  </defs>
+  <path d="M12 30 L50 52 L50 96 L12 74 Z" fill="url(#l)"/>
+  <path d="M50 52 L88 30 L88 74 L50 96 Z" fill="url(#r)"/>
+  <path d="M50 8 L88 30 L50 52 L12 30 Z" fill="url(#t)"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M31 41 V55 C24 52 24 67 31 64 V85"/>
+    <path d="M69 41 V57 C76 54 76 69 69 66 V85"/>
+    <path d="M12 52 L50 74 L88 52"/>
+  </g>
+  <path d="M50 8 L88 30 L88 74 L50 96 L12 74 L12 30 Z" fill="none" stroke="#0A0F14" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M12 30 L50 52 L88 30 M50 52 V96" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"/>
+</svg>
